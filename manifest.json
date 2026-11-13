@@ -1,0 +1,31 @@
+{
+  "manifest_version": 3,
+  "name": "Job Post Date",
+  "version": "1.0.0",
+  "description": "Shows when a job was posted on Ashby, BambooHR, Greenhouse, Lever and Workday job pages.",
+  "background": {
+    "service_worker": "background.js"
+  },
+  "host_permissions": [
+    "https://*.ashbyhq.com/*",
+    "https://*.bamboohr.com/*",
+    "https://*.greenhouse.io/*",
+    "https://*.lever.co/*",
+    "https://*.myworkdayjobs.com/*",
+    "https://*.myworkdaysite.com/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://jobs.ashbyhq.com/*",
+        "https://*.bamboohr.com/*",
+        "https://*.greenhouse.io/*",
+        "https://*.lever.co/*",
+        "https://*.myworkdayjobs.com/*",
+        "https://*.myworkdaysite.com/*"
+      ],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}
