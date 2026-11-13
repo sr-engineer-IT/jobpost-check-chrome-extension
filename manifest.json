@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Job Post Date",
   "version": "1.0.0",
-  "description": "Shows when a job was posted on Ashby, BambooHR, Greenhouse, Lever and Workday job pages.",
+  "description": "Shows when a job was posted on Ashby, BambooHR, Greenhouse, Lever, Workday, Workable and Rippling job pages.",
   "background": {
     "service_worker": "background.js"
   },
@@ -12,7 +12,9 @@
     "https://*.greenhouse.io/*",
     "https://*.lever.co/*",
     "https://*.myworkdayjobs.com/*",
-    "https://*.myworkdaysite.com/*"
+    "https://*.myworkdaysite.com/*",
+    "https://*.workable.com/*",
+    "https://ats.rippling.com/*"
   ],
   "content_scripts": [
     {
@@ -22,7 +24,9 @@
         "https://*.greenhouse.io/*",
         "https://*.lever.co/*",
         "https://*.myworkdayjobs.com/*",
-        "https://*.myworkdaysite.com/*"
+        "https://*.myworkdaysite.com/*",
+        "https://*.workable.com/*",
+        "https://ats.rippling.com/*"
       ],
       "js": ["content.js"],
       "run_at": "document_idle"

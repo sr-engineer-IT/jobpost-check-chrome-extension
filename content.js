@@ -57,6 +57,25 @@
     return data?.result?.jobOpening?.datePosted || null;
   }
 
+  async function workable(u) {
+    // apply.workable.com/{account}/j/{shortcode}[/apply]
+    const m = u.pathname.match(/^\/([^/]+)\/j\/([0-9A-Z]+)/i);
+    if (!m) return null;
+    const data = await fetchJson(`https://apply.workable.com/api/v2/accounts/${m[1]}/jobs/${m[2]}`);
+    return data?.published || null;
+  }
+
+  async function rippling(u) {
+    // ats.rippling.com/[en-CA/]{company}/jobs/{uuid}
+    // The date is in the page's Next.js data. Re-fetch the page, because that data
+    // is stale after in-app navigation.
+    if (!/\/jobs\/[0-9a-f-]{36}/i.test(u.pathname)) return null;
+    const html = await fetch(u.href, { credentials: "omit" }).then((r) => (r.ok ? r.text() : ""));
+    const json = html.match(/<script id="__NEXT_DATA__"[^>]*>([\s\S]*?)<\/script>/)?.[1];
+    if (!json) return null;
+    return JSON.parse(json)?.props?.pageProps?.apiData?.jobPost?.createdOn || null;
+  }
+
   // Fallback: schema.org JobPosting embedded in the page
   function jsonLd() {
     for (const s of document.querySelectorAll('script[type="application/ld+json"]')) {
@@ -76,6 +95,8 @@
     if (host.endsWith("greenhouse.io")) return greenhouse;
     if (host.endsWith("myworkdayjobs.com") || host.endsWith("myworkdaysite.com")) return workday;
     if (host.endsWith("bamboohr.com")) return bamboohr;
+    if (host.endsWith("workable.com")) return workable;
+    if (host === "ats.rippling.com") return rippling;
     return null;
   }
 
@@ -154,7 +175,7 @@
   // Only show "not found" on pages that look like a single job, not on job lists.
   function looksLikeJobPage() {
     const p = location.pathname;
-    return /\/jobs?\/|\/careers\/\d+|^\/[^/]+\/[0-9a-f-]{20,}/i.test(p);
+    return /\/jobs?\/|\/j\/|\/careers\/\d+|^\/[^/]+\/[0-9a-f-]{20,}/i.test(p);
   }
 
   run();
